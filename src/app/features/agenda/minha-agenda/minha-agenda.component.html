@@ -1,0 +1,68 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Minha Agenda</h1>
+      <p>Acompanhe seus agendamentos</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Novo agendamento"
+            class="bb-btn" (click)="router.navigate(['/agendamentos/novo'])"></button>
+  </div>
+
+  <!-- Filtros de status -->
+  <div class="filter-bar">
+    <button *ngFor="let f of filtros"
+            class="filter-btn"
+            [class.active]="filtroAtivo === f.value"
+            (click)="filtroAtivo = f.value">
+      {{ f.label }}
+      <span class="filter-count">{{ contar(f.value) }}</span>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="cards-grid">
+    <div *ngFor="let i of [1,2,3,4]">
+      <p-skeleton height="160px" borderRadius="14px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div *ngIf="!loading" class="cards-grid">
+    <div *ngFor="let a of filtrados()" class="agenda-card" [attr.data-status]="a.status">
+      <div class="card-glow"></div>
+      <div class="card-top">
+        <p-tag [value]="statusLabel(a.status)"
+               [severity]="statusSeverity(a.status)"
+               styleClass="bb-tag"></p-tag>
+        <span class="card-date">{{ a.dataHora | date:'dd/MM/yyyy' }}</span>
+      </div>
+
+      <div class="card-service">{{ a.procedimentoNome }}</div>
+      <div class="card-time">
+        <i class="pi pi-clock"></i> {{ a.dataHora | date:'HH:mm' }}
+      </div>
+
+      <div class="card-obs" *ngIf="a.observacao">
+        <i class="pi pi-comment"></i> {{ a.observacao }}
+      </div>
+
+      <div class="card-recusa" *ngIf="a.motivoRecusa">
+        <i class="pi pi-info-circle"></i> {{ a.motivoRecusa }}
+      </div>
+
+      <div class="card-footer">
+        <button pButton icon="pi pi-times" label="Cancelar" class="btn-cancel"
+                *ngIf="a.status === 'PENDENTE' || a.status === 'APROVADO'"
+                (click)="cancelar(a)"></button>
+      </div>
+    </div>
+
+    <div *ngIf="filtrados().length === 0" class="empty-state">
+      <i class="pi pi-calendar"></i>
+      <span>Nenhum agendamento encontrado</span>
+      <button pButton label="Solicitar agendamento" class="bb-btn mt-2"
+              (click)="router.navigate(['/agendamentos/novo'])"></button>
+    </div>
+  </div>
+</div>
+

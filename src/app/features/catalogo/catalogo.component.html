@@ -1,0 +1,94 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="header-content">
+      <span class="header-badge">✦ Nossos Serviços</span>
+      <h1>Catálogo de <em>Procedimentos</em></h1>
+      <p>Conheça todos os serviços disponíveis no BeautyBrain</p>
+    </div>
+    <div class="header-search">
+      <i class="pi pi-search search-icon"></i>
+      <input pInputText [(ngModel)]="busca" placeholder="Buscar serviço..." class="search-input" />
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="proc-grid">
+    <div *ngFor="let i of [1,2,3,4,5,6]" class="skel-card">
+      <p-skeleton height="200px" borderRadius="0"></p-skeleton>
+      <div style="padding: 20px;">
+        <p-skeleton height="18px" styleClass="mb-2"></p-skeleton>
+        <p-skeleton height="13px" width="80%" styleClass="mb-3"></p-skeleton>
+        <p-skeleton height="13px" width="60%"></p-skeleton>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div *ngIf="!loading" class="proc-grid">
+    <div *ngFor="let p of filtrados()" class="proc-card" pRipple>
+      <div class="proc-img" (click)="openDetail(p)">
+        <img [src]="p.fotoUrl || 'https://placehold.co/400x220/1a1a2e/c084fc?text=' + p.nome"
+             [alt]="p.nome" loading="lazy" />
+        <div class="proc-hover">
+          <i class="pi pi-eye"></i>
+          <span>Ver detalhes</span>
+        </div>
+      </div>
+      <div class="proc-body">
+        <div class="proc-top">
+          <h3>{{ p.nome }}</h3>
+          <span class="proc-price">R$ {{ p.preco | number:'1.2-2' }}</span>
+        </div>
+        <p>{{ p.descricao }}</p>
+        <div class="proc-footer">
+          <span class="proc-duration"><i class="pi pi-clock"></i> {{ p.duracaoMinutos }} min</span>
+          <button pButton icon="pi pi-calendar-plus" label="Agendar"
+                  class="btn-agendar"
+                  *ngIf="auth.isLogged()"
+                  (click)="agendar(p)"></button>
+          <button pButton icon="pi pi-sign-in" label="Entre para agendar"
+                  class="btn-agendar-ghost"
+                  *ngIf="!auth.isLogged()"
+                  (click)="router.navigate(['/login'])"></button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filtrados().length === 0" class="empty-state">
+      <i class="pi pi-search"></i>
+      <span>Nenhum serviço encontrado para "{{ busca }}"</span>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de detalhe -->
+<p-dialog [(visible)]="detailVisible" [modal]="true"
+          [closable]="true" [style]="{width: '540px'}"
+          styleClass="bb-dialog proc-dialog">
+  <ng-template pTemplate="header">
+    <span class="dialog-title">{{ detailing?.nome }}</span>
+  </ng-template>
+  <div *ngIf="detailing" class="detail-body">
+    <img [src]="detailing.fotoUrl || 'https://placehold.co/500x260/1a1a2e/c084fc?text=' + detailing.nome"
+         [alt]="detailing.nome" class="detail-img" />
+    <div class="detail-info">
+      <p>{{ detailing.descricao }}</p>
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">Duração</span>
+          <span class="meta-val">{{ detailing.duracaoMinutos }} minutos</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Valor</span>
+          <span class="meta-val price">R$ {{ detailing.preco | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton label="Fechar" class="btn-close" (click)="detailVisible = false"></button>
+    <button pButton icon="pi pi-calendar-plus" label="Agendar este serviço"
+            class="bb-btn" *ngIf="auth.isLogged()" (click)="agendar(detailing!)"></button>
+  </ng-template>
+</p-dialog>
+

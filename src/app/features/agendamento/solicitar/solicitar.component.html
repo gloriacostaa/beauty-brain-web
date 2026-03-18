@@ -1,0 +1,125 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Solicitar Agendamento</h1>
+    <p>Escolha um serviço e o melhor horário para você</p>
+  </div>
+
+  <!-- Steps indicator -->
+  <div class="steps-bar">
+    <div class="step" [class.active]="step >= 1" [class.done]="step > 1">
+      <div class="step-num">1</div>
+      <span>Serviço</span>
+    </div>
+    <div class="step-line" [class.done]="step > 1"></div>
+    <div class="step" [class.active]="step >= 2" [class.done]="step > 2">
+      <div class="step-num">2</div>
+      <span>Data & Hora</span>
+    </div>
+    <div class="step-line" [class.done]="step > 2"></div>
+    <div class="step" [class.active]="step >= 3">
+      <div class="step-num">3</div>
+      <span>Confirmar</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Escolher procedimento -->
+  <div *ngIf="step === 1" class="step-content">
+    <div class="proc-grid">
+      <div *ngFor="let p of procedimentos"
+           class="proc-card"
+           [class.selected]="selected?.id === p.id"
+           (click)="selectProc(p)" pRipple>
+        <div class="proc-img">
+          <img [src]="p.fotoUrl || 'https://placehold.co/300x180/1a1a2e/c084fc?text=Serviço'" [alt]="p.nome" />
+          <div class="proc-overlay">
+            <i class="pi pi-check-circle"></i>
+          </div>
+        </div>
+        <div class="proc-info">
+          <h3>{{ p.nome }}</h3>
+          <p>{{ p.descricao }}</p>
+          <div class="proc-meta">
+            <span><i class="pi pi-clock"></i> {{ p.duracaoMinutos }} min</span>
+            <span class="proc-price">R$ {{ p.preco | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button pButton pRipple label="Próximo" icon="pi pi-arrow-right" iconPos="right"
+              class="bb-btn" [disabled]="!selected" (click)="step = 2"></button>
+    </div>
+  </div>
+
+  <!-- Step 2: Data e hora -->
+  <div *ngIf="step === 2" class="step-content center">
+    <div class="datetime-card">
+      <h3>Escolha data e horário</h3>
+      <form [formGroup]="form">
+        <p-datepicker formControlName="dataHora"
+                      [inline]="true"
+                      [showTime]="true"
+                      [minDate]="minDate"
+                      [hourFormat]="'24'"
+                      styleClass="bb-calendar"></p-datepicker>
+        <div class="field mt-4">
+          <label>Observações <span class="opt">(opcional)</span></label>
+          <textarea pTextarea formControlName="observacao"
+                    placeholder="Ex: prefiro esmalte em gel..."
+                    rows="3" class="w-full"></textarea>
+        </div>
+      </form>
+      <div class="step-actions">
+        <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+                class="bb-btn-outline" (click)="step = 1"></button>
+        <button pButton pRipple label="Revisar" icon="pi pi-arrow-right" iconPos="right"
+                class="bb-btn" [disabled]="!form.get('dataHora')?.value" (click)="step = 3"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Confirmar -->
+  <div *ngIf="step === 3" class="step-content center">
+    <div class="confirm-card">
+      <div class="confirm-icon">✦</div>
+      <h2>Confirmar solicitação</h2>
+
+      <div class="confirm-rows">
+        <div class="confirm-row">
+          <span class="confirm-label">Serviço</span>
+          <span class="confirm-val">{{ selected?.nome }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Duração</span>
+          <span class="confirm-val">{{ selected?.duracaoMinutos }} minutos</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Valor</span>
+          <span class="confirm-val price">R$ {{ selected?.preco | number:'1.2-2' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Data & Hora</span>
+          <span class="confirm-val">{{ form.get('dataHora')?.value | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="confirm-row" *ngIf="form.get('observacao')?.value">
+          <span class="confirm-label">Observação</span>
+          <span class="confirm-val">{{ form.get('observacao')?.value }}</span>
+        </div>
+      </div>
+
+      <div class="confirm-badge">
+        <i class="pi pi-info-circle"></i>
+        Sua solicitação ficará <strong>pendente</strong> até aprovação do salão.
+      </div>
+
+      <div class="step-actions">
+        <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+                class="bb-btn-outline" (click)="step = 2"></button>
+        <button pButton pRipple label="Confirmar solicitação"
+                icon="pi pi-check" iconPos="right"
+                class="bb-btn" [loading]="loading" (click)="submit()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+

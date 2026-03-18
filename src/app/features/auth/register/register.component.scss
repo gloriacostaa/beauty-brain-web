@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+
+.auth-wrap {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.auth-left {
+  flex: 1;
+  background: #0a0a0f;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f472b6;
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.25);
+  padding: 6px 14px;
+  border-radius: 100px;
+  width: fit-content;
+  margin-bottom: 40px;
+}
+
+.brand-headline {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: #f1f5f9;
+  margin: 0 0 20px;
+}
+
+.brand-headline em {
+  font-style: italic;
+  color: #f472b6;
+}
+
+.brand-sub {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+.brand-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: #db2777;
+  top: -100px;
+  right: -80px;
+}
+
+.orb-2 {
+  width: 280px;
+  height: 280px;
+  background: #7c3aed;
+  bottom: -60px;
+  left: -40px;
+}
+
+.auth-right {
+  width: 480px;
+  min-width: 480px;
+  background: #080810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.card-header {
+  margin-bottom: 28px;
+}
+
+.card-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+}
+
+.card-header p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.field small {
+  font-size: 12px;
+  color: #f87171;
+}
+
+.opt {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 11px;
+}
+
+::ng-deep .auth-form .p-inputtext {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: #f1f5f9 !important;
+  padding: 12px 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  width: 100% !important;
+}
+
+::ng-deep .auth-form .p-inputtext:focus {
+  border-color: #f472b6 !important;
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15) !important;
+}
+
+::ng-deep .auth-form .p-password {
+  width: 100% !important;
+}
+
+::ng-deep .auth-form .p-password-input {
+  width: 100% !important;
+}
+
+::ng-deep .bb-btn-primary {
+  background: linear-gradient(135deg, #db2777, #7c3aed) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 13px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  width: 100% !important;
+  transition: opacity 0.2s !important;
+}
+
+::ng-deep .bb-btn-primary:hover {
+  opacity: 0.9 !important;
+}
+
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.35);
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.auth-footer a {
+  color: #f472b6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .auth-left {
+    display: none;
+  }
+  .auth-right {
+    width: 100%;
+    min-width: unset;
+    border: none;
+  }
+}

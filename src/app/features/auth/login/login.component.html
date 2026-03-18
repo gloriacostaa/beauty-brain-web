@@ -1,0 +1,61 @@
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="brand-badge">✦ BeautyBrain</div>
+    <h1 class="brand-headline">
+      Beleza <em>organizada</em>,<br>experiência <em>elevada</em>.
+    </h1>
+    <p class="brand-sub">Gerencie seus agendamentos com elegância e praticidade.</p>
+    <div class="brand-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="card-header">
+        <h2>Bem-vinda de volta</h2>
+        <p>Entre na sua conta para continuar</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+        <div class="field">
+          <label>E-mail</label>
+          <input pInputText formControlName="email"
+                 type="email" placeholder="seu@email.com"
+                 [class.ng-invalid]="invalid('email')" />
+          <small *ngIf="invalid('email')">E-mail inválido</small>
+        </div>
+
+        <div class="field">
+          <label>Senha</label>
+          <p-password formControlName="senha"
+                      placeholder="••••••"
+                      [feedback]="false"
+                      [toggleMask]="true"
+                      styleClass="w-full"
+                      [class.ng-invalid]="invalid('senha')"></p-password>
+          <small *ngIf="invalid('senha')">Mínimo 6 caracteres</small>
+        </div>
+
+        <button pButton pRipple type="submit"
+                label="Entrar"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                [loading]="loading"
+                class="bb-btn-primary w-full mt-2"></button>
+      </form>
+
+      <div class="auth-footer">
+        <span>Não tem conta?</span>
+        <a routerLink="/register">Criar conta</a>
+      </div>
+
+      <div class="demo-hint">
+        <span>Demo admin:</span> admin&#64;beautybrain.com / admin123
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,63 @@
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="brand-badge">✦ BeautyBrain</div>
+    <h1 class="brand-headline">
+      Sua beleza merece <em>atenção</em> e <em>cuidado</em>.
+    </h1>
+    <p class="brand-sub">Crie sua conta e tenha acesso ao melhor cuidado pessoal com agendamento fácil e rápido.</p>
+    <div class="brand-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="card-header">
+        <h2>Criar conta</h2>
+        <p>Preencha seus dados para começar</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+        <div class="field">
+          <label>Nome completo</label>
+          <input pInputText formControlName="nome" placeholder="Maria Silva"
+                 [class.ng-invalid]="invalid('nome')" />
+          <small *ngIf="invalid('nome')">Nome é obrigatório</small>
+        </div>
+
+        <div class="field">
+          <label>E-mail</label>
+          <input pInputText formControlName="email" type="email" placeholder="seu@email.com"
+                 [class.ng-invalid]="invalid('email')" />
+          <small *ngIf="invalid('email')">E-mail inválido</small>
+        </div>
+
+        <div class="field">
+          <label>Telefone <span class="opt">(opcional)</span></label>
+          <input pInputText formControlName="telefone" placeholder="(11) 99999-0000" />
+        </div>
+
+        <div class="field">
+          <label>Senha</label>
+          <p-password formControlName="senha" placeholder="••••••"
+                      [toggleMask]="true" styleClass="w-full"
+                      [class.ng-invalid]="invalid('senha')"></p-password>
+          <small *ngIf="invalid('senha')">Mínimo 6 caracteres</small>
+        </div>
+
+        <button pButton pRipple type="submit"
+                label="Criar minha conta"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                [loading]="loading"
+                class="bb-btn-primary w-full mt-2"></button>
+      </form>
+
+      <div class="auth-footer">
+        <span>Já tem conta?</span>
+        <a routerLink="/login">Entrar</a>
+      </div>
+    </div>
+  </div>
+</div>

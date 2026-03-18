@@ -1,0 +1,81 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Agenda Geral</h1>
+      <p>Visão completa de todos os agendamentos</p>
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-row">
+    <div class="summary-card" *ngFor="let s of summaries">
+      <div class="summary-num" [style.color]="s.color">{{ s.count }}</div>
+      <div class="summary-label">{{ s.label }}</div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading">
+    <p-skeleton height="48px" styleClass="mb-2" *ngFor="let i of [1,2,3,4,5]"></p-skeleton>
+  </div>
+
+  <!-- Tabela geral -->
+  <div *ngIf="!loading" class="table-wrap">
+    <p-table [value]="agendamentos" [paginator]="true" [rows]="15"
+             [rowsPerPageOptions]="[10,15,30]"
+             [globalFilterFields]="['usuarioNome','procedimentoNome','status']"
+             [sortField]="'dataHora'" [sortOrder]="1"
+             styleClass="bb-table" #dt>
+
+      <ng-template pTemplate="caption">
+        <div class="table-caption">
+          <span class="caption-title">Todos os Agendamentos</span>
+          <input pInputText type="text" placeholder="Buscar…"
+                 (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                 class="search-input" />
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="usuarioNome">Cliente <p-sortIcon field="usuarioNome"></p-sortIcon></th>
+          <th pSortableColumn="procedimentoNome">Serviço <p-sortIcon field="procedimentoNome"></p-sortIcon></th>
+          <th pSortableColumn="dataHora">Data & Hora <p-sortIcon field="dataHora"></p-sortIcon></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+          <th>Observação / Motivo</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-a>
+        <tr>
+          <td>
+            <div class="client-cell">
+              <div class="client-avatar">{{ initials(a.usuarioNome) }}</div>
+              <span>{{ a.usuarioNome }}</span>
+            </div>
+          </td>
+          <td><span class="service-tag">{{ a.procedimentoNome }}</span></td>
+          <td>{{ a.dataHora | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <p-tag [value]="statusLabel(a.status)"
+                   [severity]="statusSeverity(a.status)"
+                   styleClass="bb-tag"></p-tag>
+          </td>
+          <td class="obs-cell">{{ a.motivoRecusa || a.observacao || '—' }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <i class="pi pi-calendar"></i>
+              <span>Nenhum agendamento</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+

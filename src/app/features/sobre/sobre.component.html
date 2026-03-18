@@ -1,0 +1,83 @@
+<div class="sobre-wrap">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+    </div>
+    <div class="hero-content">
+      <span class="badge">✦ Nossa História</span>
+      <h1>Beleza com <em>inteligência</em><br>e <em>propósito</em></h1>
+      <p>O BeautyBrain nasceu da ideia de transformar a experiência do salão de beleza — tornando cada visita mais
+        simples, personalizada e inesquecível.</p>
+    </div>
+  </section>
+
+  <!-- MVV -->
+  <section class="mvv-section">
+    <div class="mvv-grid">
+      <div class="mvv-card mission">
+        <div class="mvv-icon">🎯</div>
+        <h2>Missão</h2>
+        <p>Conectar clientes e profissionais de beleza através de uma plataforma intuitiva que valoriza o tempo de
+          todos, oferecendo agendamentos simples, transparentes e eficientes.</p>
+      </div>
+      <div class="mvv-card vision">
+        <div class="mvv-icon">🔭</div>
+        <h2>Visão</h2>
+        <p>Ser a plataforma de referência para salões de beleza no Brasil, reconhecida pela excelência na
+          experiência do cliente e pela inovação contínua no setor de beleza.</p>
+      </div>
+      <div class="mvv-card values">
+        <div class="mvv-icon">💎</div>
+        <h2>Valores</h2>
+        <ul>
+          <li><span>✦</span> Excelência em tudo que fazemos</li>
+          <li><span>✦</span> Transparência e confiança</li>
+          <li><span>✦</span> Inovação com propósito</li>
+          <li><span>✦</span> Respeito ao tempo do cliente</li>
+          <li><span>✦</span> Inclusão e diversidade</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline-section">
+    <div class="section-header">
+      <h2>Nossa Jornada</h2>
+      <p>Os marcos que definiram quem somos hoje</p>
+    </div>
+    <div class="timeline">
+      <div *ngFor="let item of timeline; let i = index"
+           class="timeline-item" [class.right]="i % 2 !== 0">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-year">{{ item.ano }}</span>
+          <h3>{{ item.titulo }}</h3>
+          <p>{{ item.desc }}</p>
+        </div>
+      </div>
+      <div class="timeline-line"></div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div *ngFor="let s of stats" class="stat-item">
+        <div class="stat-num">{{ s.num }}</div>
+        <div class="stat-label">{{ s.label }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Pronto para uma nova <em>experiência</em>?</h2>
+      <p>Agende seu próximo serviço com apenas alguns cliques.</p>
+      <a href="/catalogo" class="cta-btn">Ver catálogo de serviços ✦</a>
+    </div>
+  </section>
+</div>
