@@ -34,12 +34,15 @@
         <p-tag [value]="statusLabel(a.status)"
                [severity]="statusSeverity(a.status)"
                styleClass="bb-tag"></p-tag>
-        <span class="card-date">{{ a.dataHora | date:'dd/MM/yyyy' }}</span>
+        <span class="card-date">{{ a.inicio | date:'dd/MM/yyyy' }}</span>
       </div>
 
       <div class="card-service">{{ a.procedimentoNome }}</div>
+      <div class="card-professional">
+        <i class="pi pi-user"></i> {{ a.profissionalNome }}
+      </div>
       <div class="card-time">
-        <i class="pi pi-clock"></i> {{ a.dataHora | date:'HH:mm' }}
+        <i class="pi pi-clock"></i> {{ a.inicio | date:'HH:mm' }} – {{ a.fim | date:'HH:mm' }}
       </div>
 
       <div class="card-obs" *ngIf="a.observacao">

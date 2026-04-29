@@ -2,7 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { AuthResponse, LoginRequest, RegisterRequest, Role } from '../models/models';
+import { AuthResponse, LoginRequest, RegisterRequest } from '../models/models';
 
 const API = 'http://localhost:8080/api';
 const TOKEN_KEY = 'bb_token';
@@ -10,14 +10,15 @@ const USER_KEY  = 'bb_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private _user = signal<AuthResponse | null>(this.loadUser());
+  private readonly _user = signal<AuthResponse | null>(this.loadUser());
 
-  readonly user     = this._user.asReadonly();
-  readonly isLogged = computed(() => !!this._user());
-  readonly isAdmin  = computed(() => this._user()?.role === 'ADMIN');
-  readonly userName = computed(() => this._user()?.nome ?? '');
+  readonly user          = this._user.asReadonly();
+  readonly isLogged      = computed(() => !!this._user());
+  readonly isAdmin       = computed(() => this._user()?.role === 'ADMIN');
+  readonly isProfissional= computed(() => (this._user()?.role as string) === 'PROFISSIONAL');
+  readonly userName      = computed(() => this._user()?.nome ?? '');
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   login(body: LoginRequest) {
     return this.http.post<AuthResponse>(`${API}/auth/login`, body).pipe(

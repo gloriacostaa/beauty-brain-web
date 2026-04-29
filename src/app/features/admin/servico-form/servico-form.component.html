@@ -1,0 +1,99 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Serviços / Catálogo</h1>
+      <p>Gerencie os procedimentos oferecidos pelo salão</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Novo Serviço" class="bb-btn" (click)="abrirNovo()"></button>
+  </div>
+  <div *ngIf="loading" class="skel-wrap">
+    <p-skeleton *ngFor="let _ of [1,2,3,4]" height="64px" borderRadius="12px"></p-skeleton>
+  </div>
+  <div *ngIf="!loading" class="table-wrap">
+    <p-table [value]="procedimentos" [paginator]="procedimentos.length > 10" [rows]="10"
+             styleClass="bb-table" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Serviço</th>
+          <th>Duração</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th style="width:130px">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-p>
+        <tr>
+          <td>
+            <div class="serv-cell">
+              <div class="serv-thumb">
+                <img *ngIf="p.fotoUrl" [src]="p.fotoUrl" [alt]="p.nome" />
+                <i *ngIf="!p.fotoUrl" class="pi pi-sparkles"></i>
+              </div>
+              <div>
+                <div class="serv-name">{{ p.nome }}</div>
+                <div class="serv-desc">{{ p.descricao }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ p.duracaoMinutos }} min</td>
+          <td class="price-cell">R$ {{ p.preco | number:'1.2-2' }}</td>
+          <td>
+            <p-tag [value]="p.ativo ? 'Ativo' : 'Inativo'"
+                   [severity]="p.ativo ? 'success' : 'danger'"></p-tag>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                      title="Editar" (click)="abrirEdicao(p)"></button>
+              <button pButton icon="pi pi-ban" class="p-button-text p-button-sm p-button-danger"
+                      title="Desativar" *ngIf="p.ativo" (click)="desativar(p)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5" class="empty-row">Nenhum serviço cadastrado.</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-dialog [(visible)]="dialogVisible" [modal]="true"
+          [header]="editando ? 'Editar Serviço' : 'Novo Serviço'"
+          [style]="{width:'520px'}" styleClass="bb-dialog">
+  <form [formGroup]="form" class="dialog-form">
+    <div class="field">
+      <label for="sv-nome">Nome do serviço *</label>
+      <input id="sv-nome" pInputText formControlName="nome" placeholder="Ex: Manicure em gel" class="w-full" />
+      <small class="field-error" *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched">Nome obrigatório.</small>
+    </div>
+    <div class="field">
+      <label for="sv-desc">Descrição *</label>
+      <textarea id="sv-desc" pTextarea formControlName="descricao" rows="3"
+                placeholder="Descreva o serviço..." class="w-full"></textarea>
+      <small class="field-error" *ngIf="form.get('descricao')?.invalid && form.get('descricao')?.touched">Descrição obrigatória.</small>
+    </div>
+    <div class="field">
+      <label for="sv-foto">URL da Foto</label>
+      <input id="sv-foto" pInputText formControlName="fotoUrl" placeholder="https://..." class="w-full" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="sv-dur">Duração (minutos) *</label>
+        <p-inputNumber id="sv-dur" formControlName="duracaoMinutos" [min]="5" [max]="480"
+                       suffix=" min" styleClass="w-full"></p-inputNumber>
+        <small class="field-error" *ngIf="form.get('duracaoMinutos')?.invalid && form.get('duracaoMinutos')?.touched">Mínimo 5 minutos.</small>
+      </div>
+      <div class="field">
+        <label for="sv-preco">Preço (R$) *</label>
+        <p-inputNumber id="sv-preco" formControlName="preco" mode="currency" currency="BRL"
+                       locale="pt-BR" styleClass="w-full"></p-inputNumber>
+        <small class="field-error" *ngIf="form.get('preco')?.invalid && form.get('preco')?.touched">Preço inválido.</small>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" class="bb-btn-outline" (click)="dialogVisible = false"></button>
+    <button pButton [label]="editando ? 'Salvar alterações' : 'Cadastrar'"
+            icon="pi pi-check" class="bb-btn" [loading]="saving" (click)="salvar()"></button>
+  </ng-template>
+</p-dialog>

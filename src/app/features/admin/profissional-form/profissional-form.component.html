@@ -1,0 +1,175 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Profissionais</h1>
+      <p>Cadastre e gerencie os profissionais do salão</p>
+    </div>
+    <button pButton icon="pi pi-plus" label="Novo Profissional"
+            class="bb-btn" (click)="abrirNovo()"></button>
+  </div>
+  <div *ngIf="loading" class="skel-wrap">
+    <p-skeleton *ngFor="let _ of [1,2,3]" height="64px" borderRadius="12px"></p-skeleton>
+  </div>
+  <div *ngIf="!loading" class="table-wrap">
+    <p-table [value]="profissionais" [paginator]="profissionais.length > 10" [rows]="10"
+             styleClass="bb-table" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Profissional</th>
+          <th>Bio</th>
+          <th>Status</th>
+          <th style="width:130px">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-p>
+        <tr>
+          <td>
+            <div class="prof-cell">
+              <div class="prof-avatar-sm">
+                <img *ngIf="p.fotoUrl" [src]="p.fotoUrl" [alt]="p.nome" />
+                <span *ngIf="!p.fotoUrl">{{ p.nome[0] }}</span>
+              </div>
+              <span class="prof-name">{{ p.nome }}</span>
+            </div>
+          </td>
+          <td class="bio-cell">{{ p.bio || '—' }}</td>
+          <td>
+            <p-tag [value]="p.ativo ? 'Ativo' : 'Inativo'"
+                   [severity]="p.ativo ? 'success' : 'danger'"></p-tag>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                      title="Editar" (click)="abrirEdicao(p)"></button>
+              <button pButton icon="pi pi-ban" class="p-button-text p-button-sm p-button-danger"
+                      title="Desativar" *ngIf="p.ativo" (click)="desativar(p)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" class="empty-row">Nenhum profissional cadastrado.</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<!-- ── Dialog ──────────────────────────────────────────────────────────── -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true"
+          [header]="editando ? 'Editar Profissional' : 'Novo Profissional'"
+          [style]="{width:'680px'}" styleClass="bb-dialog">
+  <p-tabView styleClass="bb-tabs">
+    <!-- ── Aba 1: Dados ───────────────────────────────────────────────── -->
+    <p-tabPanel header="Dados" leftIcon="pi pi-user">
+      <form [formGroup]="form" class="dialog-form">
+        <ng-container *ngIf="!editando">
+          <div class="field">
+            <label for="pf-nome">Nome completo *</label>
+            <input id="pf-nome" pInputText formControlName="nome"
+                   placeholder="Ana Lima" class="w-full" />
+            <small class="field-error"
+                   *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched">
+              Nome obrigatório (mín. 3 caracteres).
+            </small>
+          </div>
+          <div class="field">
+            <label for="pf-email">E-mail *</label>
+            <input id="pf-email" pInputText formControlName="email"
+                   placeholder="ana@salao.com" class="w-full" />
+            <small class="field-error"
+                   *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+              E-mail inválido.
+            </small>
+          </div>
+          <div class="field">
+            <label for="pf-senha">Senha *</label>
+            <input id="pf-senha" pInputText type="password" formControlName="senha"
+                   placeholder="Mínimo 6 caracteres" class="w-full" />
+            <small class="field-error"
+                   *ngIf="form.get('senha')?.invalid && form.get('senha')?.touched">
+              Senha obrigatória (mín. 6 caracteres).
+            </small>
+          </div>
+        </ng-container>
+        <div class="field">
+          <label for="pf-bio">Bio / Especialidade</label>
+          <textarea id="pf-bio" pTextarea formControlName="bio" rows="3"
+                    placeholder="Ex: Especialista em unhas em gel..." class="w-full"></textarea>
+        </div>
+        <div class="field">
+          <label for="pf-foto">URL da Foto</label>
+          <input id="pf-foto" pInputText formControlName="fotoUrl"
+                 placeholder="https://..." class="w-full" />
+        </div>
+        <div class="field">
+          <label>Procedimentos que atende</label>
+          <p-multiSelect
+            [options]="procedimentos"
+            [(ngModel)]="procsVinculados"
+            [ngModelOptions]="{standalone: true}"
+            optionLabel="nome"
+            optionValue="id"
+            placeholder="Selecione os serviços"
+            styleClass="w-full bb-multiselect"
+            display="chip">
+          </p-multiSelect>
+        </div>
+      </form>
+    </p-tabPanel>
+    <!-- ── Aba 2: Disponibilidade ─────────────────────────────────────── -->
+    <p-tabPanel header="Disponibilidade" leftIcon="pi pi-calendar">
+      <div class="disp-hint">
+        <i class="pi pi-info-circle"></i>
+        Ative os dias em que o profissional atende e defina o horário de trabalho.
+      </div>
+      <div class="disp-grid">
+        <div *ngFor="let dia of dias" class="disp-row" [class.disp-row--ativo]="dia.ativo">
+          <!-- Toggle do dia -->
+          <div class="disp-toggle">
+            <p-toggleButton
+              [(ngModel)]="dia.ativo"
+              [onLabel]="dia.label"
+              [offLabel]="dia.label"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              styleClass="disp-toggle-btn">
+            </p-toggleButton>
+          </div>
+          <!-- Horários (visível só quando ativo) -->
+          <div class="disp-horarios" *ngIf="dia.ativo">
+            <div class="disp-time-group">
+              <label>Início</label>
+              <input type="time"
+                     [(ngModel)]="dia.horaInicio"
+                     class="time-input"
+                     [ngModelOptions]="{standalone: true}" />
+            </div>
+            <span class="disp-sep">até</span>
+            <div class="disp-time-group">
+              <label>Fim</label>
+              <input type="time"
+                     [(ngModel)]="dia.horaFim"
+                     class="time-input"
+                     [ngModelOptions]="{standalone: true}" />
+            </div>
+            <!-- Alerta de horário inválido -->
+            <small class="field-error"
+                   *ngIf="dia.horaInicio && dia.horaFim && dia.horaInicio >= dia.horaFim">
+              Hora início deve ser menor que hora fim.
+            </small>
+          </div>
+          <!-- Placeholder quando inativo -->
+          <div class="disp-inativo" *ngIf="!dia.ativo">
+            <span>Não atende</span>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" class="bb-btn-outline"
+            (click)="dialogVisible = false"></button>
+    <button pButton [label]="editando ? 'Salvar alterações' : 'Cadastrar'"
+            icon="pi pi-check" class="bb-btn"
+            [loading]="saving" (click)="salvar()"></button>
+  </ng-template>
+</p-dialog>

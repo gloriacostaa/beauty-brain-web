@@ -23,8 +23,8 @@
   <div *ngIf="!loading" class="table-wrap">
     <p-table [value]="agendamentos" [paginator]="true" [rows]="15"
              [rowsPerPageOptions]="[10,15,30]"
-             [globalFilterFields]="['usuarioNome','procedimentoNome','status']"
-             [sortField]="'dataHora'" [sortOrder]="1"
+             [globalFilterFields]="['usuarioNome','procedimentoNome','profissionalNome','status']"
+             [sortField]="'inicio'" [sortOrder]="1"
              styleClass="bb-table" #dt>
 
       <ng-template pTemplate="caption">
@@ -40,7 +40,8 @@
         <tr>
           <th pSortableColumn="usuarioNome">Cliente <p-sortIcon field="usuarioNome"></p-sortIcon></th>
           <th pSortableColumn="procedimentoNome">Serviço <p-sortIcon field="procedimentoNome"></p-sortIcon></th>
-          <th pSortableColumn="dataHora">Data & Hora <p-sortIcon field="dataHora"></p-sortIcon></th>
+          <th pSortableColumn="profissionalNome">Profissional <p-sortIcon field="profissionalNome"></p-sortIcon></th>
+          <th pSortableColumn="inicio">Data & Hora <p-sortIcon field="inicio"></p-sortIcon></th>
           <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
           <th>Observação / Motivo</th>
         </tr>
@@ -55,7 +56,8 @@
             </div>
           </td>
           <td><span class="service-tag">{{ a.procedimentoNome }}</span></td>
-          <td>{{ a.dataHora | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ a.profissionalNome }}</td>
+          <td>{{ a.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>
             <p-tag [value]="statusLabel(a.status)"
                    [severity]="statusSeverity(a.status)"
@@ -67,7 +69,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">
+          <td colspan="6">
             <div class="empty-state">
               <i class="pi pi-calendar"></i>
               <span>Nenhum agendamento</span>

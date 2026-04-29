@@ -6,7 +6,7 @@ const API = 'http://localhost:8080/api/agendamentos';
 
 @Injectable({ providedIn: 'root' })
 export class AgendamentoService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   listarTodos()     { return this.http.get<Agendamento[]>(API); }
   listarMeus()      { return this.http.get<Agendamento[]>(`${API}/meus`); }

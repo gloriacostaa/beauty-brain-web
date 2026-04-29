@@ -21,7 +21,7 @@
   <div *ngIf="!loading" class="table-wrap">
     <p-table [value]="pendentes" [paginator]="true" [rows]="10"
              [rowsPerPageOptions]="[5,10,25]"
-             [globalFilterFields]="['usuarioNome','procedimentoNome']"
+             [globalFilterFields]="['usuarioNome','procedimentoNome','profissionalNome']"
              styleClass="bb-table" #dt>
 
       <ng-template pTemplate="caption">
@@ -37,7 +37,8 @@
         <tr>
           <th pSortableColumn="usuarioNome">Cliente <p-sortIcon field="usuarioNome"></p-sortIcon></th>
           <th pSortableColumn="procedimentoNome">Serviço <p-sortIcon field="procedimentoNome"></p-sortIcon></th>
-          <th pSortableColumn="dataHora">Data & Hora <p-sortIcon field="dataHora"></p-sortIcon></th>
+          <th pSortableColumn="profissionalNome">Profissional <p-sortIcon field="profissionalNome"></p-sortIcon></th>
+          <th pSortableColumn="inicio">Data & Hora <p-sortIcon field="inicio"></p-sortIcon></th>
           <th>Obs.</th>
           <th class="th-actions">Ações</th>
         </tr>
@@ -52,7 +53,8 @@
             </div>
           </td>
           <td><span class="service-tag">{{ a.procedimentoNome }}</span></td>
-          <td>{{ a.dataHora | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ a.profissionalNome }}</td>
+          <td>{{ a.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
           <td class="obs-cell">{{ a.observacao || '—' }}</td>
           <td>
             <div class="action-btns">
@@ -69,7 +71,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">
+          <td colspan="6">
             <div class="empty-state">
               <i class="pi pi-check-circle"></i>
               <span>Nenhuma solicitação pendente</span>

@@ -16,9 +16,19 @@ export const adminGuard: CanActivateFn = () => {
   return router.createUrlTree(['/agenda/minha']);
 };
 
+export const profissionalOrAdminGuard: CanActivateFn = () => {
+  const auth   = inject(AuthService);
+  const router = inject(Router);
+  if (auth.isAdmin() || auth.isProfissional()) return true;
+  return router.createUrlTree(['/agenda/minha']);
+};
+
 export const guestGuard: CanActivateFn = () => {
   const auth   = inject(AuthService);
   const router = inject(Router);
   if (!auth.isLogged()) return true;
-  return router.createUrlTree([auth.isAdmin() ? '/agendamentos/aprovacoes' : '/agenda/minha']);
+  const dest = auth.isAdmin()        ? '/agendamentos/aprovacoes'
+             : auth.isProfissional() ? '/agenda/admin'
+             : '/agenda/minha';
+  return router.createUrlTree([dest]);
 };

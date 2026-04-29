@@ -13,27 +13,38 @@
     <div class="step-line" [class.done]="step > 1"></div>
     <div class="step" [class.active]="step >= 2" [class.done]="step > 2">
       <div class="step-num">2</div>
-      <span>Data & Hora</span>
+      <span>Profissional</span>
     </div>
     <div class="step-line" [class.done]="step > 2"></div>
-    <div class="step" [class.active]="step >= 3">
+    <div class="step" [class.active]="step >= 3" [class.done]="step > 3">
       <div class="step-num">3</div>
+      <span>Horário</span>
+    </div>
+    <div class="step-line" [class.done]="step > 3"></div>
+    <div class="step" [class.active]="step >= 4">
+      <div class="step-num">4</div>
       <span>Confirmar</span>
     </div>
   </div>
 
-  <!-- Step 1: Escolher procedimento -->
+  <!-- ── Step 1: Escolher procedimento ─────────────────────────────────── -->
   <div *ngIf="step === 1" class="step-content">
-    <div class="proc-grid">
+    <div *ngIf="loadingProcs" class="proc-grid">
+      <p-skeleton *ngFor="let _ of [1,2,3]" height="220px" borderRadius="14px"></p-skeleton>
+    </div>
+
+    <div *ngIf="!loadingProcs" class="proc-grid">
       <div *ngFor="let p of procedimentos"
            class="proc-card"
-           [class.selected]="selected?.id === p.id"
-           (click)="selectProc(p)" pRipple>
+           [class.selected]="selectedProc?.id === p.id"
+           (click)="selectProc(p)"
+           (keydown.enter)="selectProc(p)"
+           (keydown.space)="selectProc(p)"
+           tabindex="0"
+           pRipple>
         <div class="proc-img">
           <img [src]="p.fotoUrl || 'https://placehold.co/300x180/1a1a2e/c084fc?text=Serviço'" [alt]="p.nome" />
-          <div class="proc-overlay">
-            <i class="pi pi-check-circle"></i>
-          </div>
+          <div class="proc-overlay"><i class="pi pi-check-circle"></i></div>
         </div>
         <div class="proc-info">
           <h3>{{ p.nome }}</h3>
@@ -45,41 +56,121 @@
         </div>
       </div>
     </div>
+
     <div class="step-actions">
       <button pButton pRipple label="Próximo" icon="pi pi-arrow-right" iconPos="right"
-              class="bb-btn" [disabled]="!selected" (click)="step = 2"></button>
+              class="bb-btn" [disabled]="!selectedProc" (click)="goToStep2()"></button>
     </div>
   </div>
 
-  <!-- Step 2: Data e hora -->
-  <div *ngIf="step === 2" class="step-content center">
-    <div class="datetime-card">
-      <h3>Escolha data e horário</h3>
-      <form [formGroup]="form">
-        <p-datepicker formControlName="dataHora"
-                      [inline]="true"
-                      [showTime]="true"
-                      [minDate]="minDate"
-                      [hourFormat]="'24'"
-                      styleClass="bb-calendar"></p-datepicker>
-        <div class="field mt-4">
-          <label>Observações <span class="opt">(opcional)</span></label>
-          <textarea pTextarea formControlName="observacao"
+  <!-- ── Step 2: Escolher profissional ─────────────────────────────────── -->
+  <div *ngIf="step === 2" class="step-content">
+    <div *ngIf="loadingProfs" class="prof-grid">
+      <p-skeleton *ngFor="let _ of [1,2,3]" height="140px" borderRadius="14px"></p-skeleton>
+    </div>
+
+    <div *ngIf="!loadingProfs && profissionais.length === 0" class="empty-state">
+      <i class="pi pi-user-minus"></i>
+      <p>Nenhum profissional disponível para este serviço.</p>
+    </div>
+
+    <div *ngIf="!loadingProfs && profissionais.length > 0" class="prof-grid">
+      <div *ngFor="let pr of profissionais"
+           class="prof-card"
+           [class.selected]="selectedProfissional?.id === pr.id"
+           (click)="selectProfissional(pr)"
+           (keydown.enter)="selectProfissional(pr)"
+           (keydown.space)="selectProfissional(pr)"
+           tabindex="0"
+           pRipple>
+        <div class="prof-avatar">
+          <img *ngIf="pr.fotoUrl" [src]="pr.fotoUrl" [alt]="pr.nome" />
+          <div *ngIf="!pr.fotoUrl" class="prof-avatar-placeholder">
+            <i class="pi pi-user"></i>
+          </div>
+          <div class="prof-check"><i class="pi pi-check"></i></div>
+        </div>
+        <div class="prof-info">
+          <h3>{{ pr.nome }}</h3>
+          <p *ngIf="pr.bio">{{ pr.bio }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+              class="bb-btn-outline" (click)="step = 1"></button>
+      <button pButton pRipple label="Próximo" icon="pi pi-arrow-right" iconPos="right"
+              class="bb-btn" [disabled]="!selectedProfissional" (click)="goToStep3()"></button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Escolher data e slot ──────────────────────────────────── -->
+  <div *ngIf="step === 3" class="step-content">
+    <div class="slot-layout">
+
+      <!-- Calendário -->
+      <div class="slot-calendar-wrap">
+        <h3>Escolha a data</h3>
+        <p-datepicker
+          [formControl]="dataCtrl"
+          [inline]="true"
+          [minDate]="minDate"
+          [showTime]="false"
+          styleClass="bb-calendar"
+          (onSelect)="onDataChange(dataCtrl.value)">
+        </p-datepicker>
+      </div>
+
+      <!-- Slots disponíveis -->
+      <div class="slot-list-wrap">
+        <h3>Horários disponíveis</h3>
+
+        <div *ngIf="!dataCtrl.value" class="slot-hint">
+          <i class="pi pi-calendar"></i>
+          <span>Selecione uma data para ver os horários.</span>
+        </div>
+
+        <div *ngIf="dataCtrl.value && loadingSlots" class="slot-list">
+          <p-skeleton *ngFor="let _ of [1,2,3,4]" height="44px" borderRadius="10px"></p-skeleton>
+        </div>
+
+        <div *ngIf="dataCtrl.value && !loadingSlots && slots.length === 0" class="slot-hint">
+          <i class="pi pi-calendar-times"></i>
+          <span>Sem horários disponíveis nesta data.</span>
+        </div>
+
+        <div *ngIf="dataCtrl.value && !loadingSlots && slots.length > 0" class="slot-list">
+          <button *ngFor="let s of slots"
+                  pButton pRipple
+                  class="slot-btn"
+                  [class.slot-selected]="selectedSlot === s"
+                  (click)="selectSlot(s)">
+            <i class="pi pi-clock"></i>
+            {{ formatSlotLabel(s) }}
+          </button>
+        </div>
+
+        <!-- Observação -->
+        <div *ngIf="selectedSlot" class="field mt-4" [formGroup]="form">
+          <label for="observacao">Observações <span class="opt">(opcional)</span></label>
+          <textarea id="observacao" pTextarea formControlName="observacao"
                     placeholder="Ex: prefiro esmalte em gel..."
                     rows="3" class="w-full"></textarea>
         </div>
-      </form>
-      <div class="step-actions">
-        <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
-                class="bb-btn-outline" (click)="step = 1"></button>
-        <button pButton pRipple label="Revisar" icon="pi pi-arrow-right" iconPos="right"
-                class="bb-btn" [disabled]="!form.get('dataHora')?.value" (click)="step = 3"></button>
       </div>
+    </div>
+
+    <div class="step-actions">
+      <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+              class="bb-btn-outline" (click)="step = 2"></button>
+      <button pButton pRipple label="Revisar" icon="pi pi-arrow-right" iconPos="right"
+              class="bb-btn" [disabled]="!selectedSlot" (click)="goToStep4()"></button>
     </div>
   </div>
 
-  <!-- Step 3: Confirmar -->
-  <div *ngIf="step === 3" class="step-content center">
+  <!-- ── Step 4: Confirmar ─────────────────────────────────────────────── -->
+  <div *ngIf="step === 4" class="step-content center">
     <div class="confirm-card">
       <div class="confirm-icon">✦</div>
       <h2>Confirmar solicitação</h2>
@@ -87,19 +178,27 @@
       <div class="confirm-rows">
         <div class="confirm-row">
           <span class="confirm-label">Serviço</span>
-          <span class="confirm-val">{{ selected?.nome }}</span>
+          <span class="confirm-val">{{ selectedProc?.nome }}</span>
         </div>
         <div class="confirm-row">
           <span class="confirm-label">Duração</span>
-          <span class="confirm-val">{{ selected?.duracaoMinutos }} minutos</span>
+          <span class="confirm-val">{{ selectedProc?.duracaoMinutos }} minutos</span>
         </div>
         <div class="confirm-row">
           <span class="confirm-label">Valor</span>
-          <span class="confirm-val price">R$ {{ selected?.preco | number:'1.2-2' }}</span>
+          <span class="confirm-val price">R$ {{ selectedProc?.preco | number:'1.2-2' }}</span>
         </div>
         <div class="confirm-row">
-          <span class="confirm-label">Data & Hora</span>
-          <span class="confirm-val">{{ form.get('dataHora')?.value | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span class="confirm-label">Profissional</span>
+          <span class="confirm-val">{{ selectedProfissional?.nome }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Data</span>
+          <span class="confirm-val">{{ dataCtrl.value | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Horário</span>
+          <span class="confirm-val">{{ selectedSlot ? formatSlotLabel(selectedSlot) : '' }}</span>
         </div>
         <div class="confirm-row" *ngIf="form.get('observacao')?.value">
           <span class="confirm-label">Observação</span>
@@ -114,10 +213,10 @@
 
       <div class="step-actions">
         <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
-                class="bb-btn-outline" (click)="step = 2"></button>
+                class="bb-btn-outline" (click)="step = 3"></button>
         <button pButton pRipple label="Confirmar solicitação"
                 icon="pi pi-check" iconPos="right"
-                class="bb-btn" [loading]="loading" (click)="submit()"></button>
+                class="bb-btn" [loading]="loadingSubmit" (click)="submit()"></button>
       </div>
     </div>
   </div>

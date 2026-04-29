@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600&family=DM+Sans:wght@300;400;500&display=swap');
+.page-wrap { padding: 40px; max-width: 1100px; margin: 0 auto; font-family: 'DM Sans', sans-serif; }
+.page-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 32px; gap: 16px; flex-wrap: wrap;
+}
+.page-header h1 { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; color: #f1f5f9; margin: 0 0 4px; }
+.page-header p  { color: rgba(255,255,255,.4); font-size: 14px; margin: 0; }
+.skel-wrap { display: flex; flex-direction: column; gap: 12px; }
+.table-wrap { border-radius: 14px; overflow: hidden; }
+::ng-deep .bb-table { background: transparent !important; }
+::ng-deep .bb-table .p-datatable-thead > tr > th { background: rgba(255,255,255,.04) !important; color: rgba(255,255,255,.5) !important; font-size: 12px !important; font-weight: 600 !important; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid rgba(255,255,255,.06) !important; }
+::ng-deep .bb-table .p-datatable-tbody > tr > td { background: rgba(255,255,255,.02) !important; color: #f1f5f9 !important; font-size: 14px !important; border-bottom: 1px solid rgba(255,255,255,.04) !important; }
+::ng-deep .bb-table .p-datatable-tbody > tr:hover > td { background: rgba(192,132,252,.06) !important; }
+.serv-cell { display: flex; align-items: center; gap: 14px; }
+.serv-thumb {
+  width: 48px; height: 48px; border-radius: 10px; overflow: hidden; flex-shrink: 0;
+  background: rgba(124,58,237,.2); display: flex; align-items: center;
+  justify-content: center; color: #c084fc; font-size: 18px;
+}
+.serv-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.serv-name { font-weight: 600; font-size: 14px; }
+.serv-desc { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 2px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.price-cell { color: #a78bfa !important; font-weight: 600 !important; }
+.action-btns { display: flex; gap: 4px; }
+.empty-row { text-align: center; color: rgba(255,255,255,.3) !important; padding: 32px !important; }
+.dialog-form { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
+.field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.field label { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.55); }
+.field-error { color: #f87171; font-size: 12px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.w-full { width: 100%; }
+::ng-deep .bb-dialog .p-dialog { background: #1a1a2e !important; border: 1px solid rgba(255,255,255,.1) !important; border-radius: 16px !important; }
+::ng-deep .bb-dialog .p-dialog-header { background: transparent !important; color: #f1f5f9 !important; border-bottom: 1px solid rgba(255,255,255,.06) !important; font-family: 'Fraunces', serif !important; }
+::ng-deep .bb-dialog .p-dialog-content { background: transparent !important; padding: 24px !important; }
+::ng-deep .bb-dialog .p-dialog-footer { background: transparent !important; border-top: 1px solid rgba(255,255,255,.06) !important; display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px !important; }
+::ng-deep input.p-inputtext, ::ng-deep textarea.p-textarea { background: rgba(255,255,255,.04) !important; border: 1px solid rgba(255,255,255,.1) !important; border-radius: 10px !important; color: #f1f5f9 !important; font-family: 'DM Sans', sans-serif !important; font-size: 14px !important; }
+::ng-deep input.p-inputtext:focus, ::ng-deep textarea.p-textarea:focus { border-color: #c084fc !important; }
+::ng-deep .p-inputnumber-input { background: rgba(255,255,255,.04) !important; border: 1px solid rgba(255,255,255,.1) !important; border-radius: 10px !important; color: #f1f5f9 !important; font-size: 14px !important; width: 100%; }
+::ng-deep .bb-btn { background: linear-gradient(135deg, #7c3aed, #db2777) !important; border: none !important; border-radius: 10px !important; font-family: 'DM Sans', sans-serif !important; font-size: 14px !important; font-weight: 500 !important; }
+::ng-deep .bb-btn-outline { background: transparent !important; border: 1px solid rgba(255,255,255,.15) !important; color: rgba(255,255,255,.6) !important; border-radius: 10px !important; }

@@ -12,7 +12,6 @@
 
     <ul class="bb-nav">
       <li class="nav-section">Menu</li>
-
       <li>
         <a routerLink="/catalogo" routerLinkActive="active" pRipple>
           <i class="pi pi-sparkles"></i> Catálogo
@@ -24,7 +23,8 @@
         </a>
       </li>
 
-      <ng-container *ngIf="!auth.isAdmin()">
+      <!-- USER -->
+      <ng-container *ngIf="!auth.isAdmin() && !auth.isProfissional()">
         <li class="nav-section">Agendamento</li>
         <li>
           <a routerLink="/agendamentos/novo" routerLinkActive="active" pRipple>
@@ -38,6 +38,22 @@
         </li>
       </ng-container>
 
+      <!-- PROFISSIONAL -->
+      <ng-container *ngIf="auth.isProfissional()">
+        <li class="nav-section">Meu Trabalho</li>
+        <li>
+          <a routerLink="/agendamentos/aprovacoes" routerLinkActive="active" pRipple>
+            <i class="pi pi-check-circle"></i> Aprovações
+          </a>
+        </li>
+        <li>
+          <a routerLink="/agenda/admin" routerLinkActive="active" pRipple>
+            <i class="pi pi-calendar-plus"></i> Agenda Geral
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- ADMIN -->
       <ng-container *ngIf="auth.isAdmin()">
         <li class="nav-section">Administração</li>
         <li>
@@ -50,6 +66,17 @@
             <i class="pi pi-calendar-plus"></i> Agenda Geral
           </a>
         </li>
+        <li class="nav-section">Cadastros</li>
+        <li>
+          <a routerLink="/admin/profissionais" routerLinkActive="active" pRipple>
+            <i class="pi pi-users"></i> Profissionais
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/servicos" routerLinkActive="active" pRipple>
+            <i class="pi pi-tag"></i> Serviços
+          </a>
+        </li>
       </ng-container>
     </ul>
 
@@ -57,7 +84,9 @@
       <p-avatar [label]="initials()" styleClass="bb-avatar"></p-avatar>
       <div class="user-info">
         <span class="user-name">{{ auth.userName() }}</span>
-        <span class="user-role">{{ auth.isAdmin() ? 'Administrador' : 'Cliente' }}</span>
+        <span class="user-role">
+          {{ auth.isAdmin() ? 'Administrador' : auth.isProfissional() ? 'Profissional' : 'Cliente' }}
+        </span>
       </div>
       <button class="logout-btn" (click)="auth.logout()" title="Sair">
         <i class="pi pi-sign-out"></i>
