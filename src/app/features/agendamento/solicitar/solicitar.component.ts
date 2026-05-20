@@ -71,12 +71,12 @@ export class SolicitarComponent implements OnInit {
   // ─── Step 1: Selecionar procedimento ──────────────────────────────────────
 
   selectProc(p: Procedimento) {
-    if (this.selectedProc?.id === p.id) return;
     this.selectedProc        = p;
     this.selectedProfissional = null;
     this.selectedSlot        = null;
     this.profissionais       = [];
     this.slots               = [];
+    this.goToStep2();
   }
 
   goToStep2() {
