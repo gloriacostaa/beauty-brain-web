@@ -1,0 +1,767 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+.page-wrap {
+  padding: 40px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.header-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c084fc;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.header-content h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 34px;
+  font-weight: 300;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.header-content h1 em {
+  font-style: italic;
+  color: #c084fc;
+}
+
+.header-content p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  margin: 0;
+}
+
+// Barra de busca (step 1)
+.header-search {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+::ng-deep .search-input {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: #f1f5f9 !important;
+  padding: 11px 14px 11px 38px !important;
+  font-size: 14px !important;
+  width: 260px !important;
+}
+
+::ng-deep .search-input:focus {
+  border-color: #c084fc !important;
+}
+
+// Badge de serviço selecionado (steps 2-4)
+.selected-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(192, 132, 252, 0.08);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.selected-badge-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #1a1a2e;
+}
+
+.selected-badge-label {
+  display: block;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.selected-badge-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+::ng-deep .btn-edit-proc {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  border-radius: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  margin-left: 4px;
+}
+
+::ng-deep .btn-edit-proc:hover {
+  border-color: #c084fc !important;
+  color: #c084fc !important;
+}
+
+// ─── Steps bar ────────────────────────────────────────────────────────────────
+
+.steps-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.25s;
+}
+
+.step span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.25s;
+}
+
+.step.active .step-num {
+  border-color: #c084fc;
+  background: rgba(192, 132, 252, 0.15);
+  color: #c084fc;
+}
+
+.step.active span {
+  color: #c084fc;
+}
+
+.step.done .step-num {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: white;
+}
+
+.step.done span {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 12px;
+  transition: background 0.3s;
+}
+
+.step-line.done {
+  background: #7c3aed;
+}
+
+// ─── Step content ─────────────────────────────────────────────────────────────
+
+.step-content {
+  animation: fadeIn 0.3s ease;
+}
+
+.step-content.center {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Step 1: Grid de procedimentos ───────────────────────────────────────────
+
+.proc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.skel-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.proc-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.proc-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(192, 132, 252, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.proc-img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proc-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s;
+}
+
+.proc-card:hover .proc-img img {
+  transform: scale(1.04);
+}
+
+.proc-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(124, 58, 237, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.proc-hover i {
+  font-size: 22px;
+}
+
+.proc-img:hover .proc-hover {
+  opacity: 1;
+}
+
+.proc-body {
+  padding: 18px;
+}
+
+.proc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.proc-top h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.proc-price {
+  color: #a78bfa;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.proc-body p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+
+.proc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.proc-duration {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.proc-duration i {
+  font-size: 12px;
+}
+
+::ng-deep .btn-agendar {
+  background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  padding: 7px 14px !important;
+}
+
+// ─── Step 2: Profissionais ────────────────────────────────────────────────────
+
+.prof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.prof-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 20px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.prof-card:hover {
+  border-color: rgba(192, 132, 252, 0.3);
+  transform: translateY(-2px);
+}
+
+.prof-card.selected {
+  border-color: #c084fc;
+  background: rgba(192, 132, 252, 0.08);
+}
+
+.prof-avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.prof-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prof-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(124, 58, 237, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c084fc;
+  font-size: 22px;
+}
+
+.prof-check {
+  position: absolute;
+  inset: 0;
+  background: rgba(124, 58, 237, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  opacity: 0;
+  border-radius: 50%;
+  transition: opacity 0.2s;
+}
+
+.prof-card.selected .prof-check {
+  opacity: 1;
+}
+
+.prof-info h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 4px;
+}
+
+.prof-info p {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ─── Step 3: Calendário & Slots ───────────────────────────────────────────────
+
+.slot-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .slot-layout { grid-template-columns: 1fr; }
+}
+
+.slot-calendar-wrap h3,
+.slot-list-wrap h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  color: #f1f5f9;
+  margin: 0 0 16px;
+}
+
+.slot-list-wrap {
+  padding-top: 2px;
+}
+
+.slot-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.slot-hint i {
+  font-size: 20px;
+  color: rgba(192, 132, 252, 0.4);
+}
+
+.slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slot-btn {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  padding: 10px 16px !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.slot-btn:hover {
+  border-color: rgba(192, 132, 252, 0.4) !important;
+  color: #f1f5f9 !important;
+}
+
+.slot-btn.slot-selected {
+  background: rgba(192, 132, 252, 0.12) !important;
+  border-color: #c084fc !important;
+  color: #f1f5f9 !important;
+}
+
+::ng-deep .bb-calendar {
+  background: transparent !important;
+  border: none !important;
+  width: 100% !important;
+}
+
+::ng-deep .bb-calendar .p-datepicker {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  color: #f1f5f9 !important;
+}
+
+::ng-deep .bb-calendar .p-highlight {
+  background: #7c3aed !important;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.opt {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 11px;
+}
+
+::ng-deep textarea.p-textarea {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: #f1f5f9 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+}
+
+::ng-deep textarea.p-textarea:focus {
+  border-color: #c084fc !important;
+}
+
+// ─── Step 4: Confirmação ──────────────────────────────────────────────────────
+
+.confirm-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+}
+
+.confirm-icon {
+  font-size: 32px;
+  color: #c084fc;
+  margin-bottom: 12px;
+}
+
+.confirm-card h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 28px;
+}
+
+.confirm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.confirm-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.confirm-val {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f1f5f9;
+}
+
+.confirm-val.price {
+  color: #a78bfa;
+}
+
+.confirm-badge {
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: rgba(251, 191, 36, 0.8);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.confirm-badge i { margin-right: 6px; }
+.confirm-badge strong { color: #fbbf24; }
+
+// ─── Ações ────────────────────────────────────────────────────────────────────
+
+.step-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+::ng-deep .bb-btn {
+  background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .bb-btn-outline {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 10px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+}
+
+::ng-deep .bb-btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.empty-state i {
+  font-size: 40px;
+  color: rgba(192, 132, 252, 0.3);
+}
+
+.empty-state p,
+.empty-state span {
+  font-size: 14px;
+  margin: 0;
+}
+
+// ─── Modal de detalhe ─────────────────────────────────────────────────────────
+
+::ng-deep .bb-dialog .p-dialog {
+  background: #12121f !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+}
+
+::ng-deep .bb-dialog .p-dialog-header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+::ng-deep .bb-dialog .p-dialog-footer {
+  background: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.dialog-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.detail-img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background: #1a1a2e;
+}
+
+.detail-info p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 24px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.meta-val {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.meta-val.price {
+  color: #a78bfa;
+}
+
+::ng-deep .btn-close-dialog {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  border-radius: 8px !important;
+}
+
+// ─── Utilitários ─────────────────────────────────────────────────────────────
+
+.mt-4 { margin-top: 20px; }
+.w-full { width: 100%; }
+

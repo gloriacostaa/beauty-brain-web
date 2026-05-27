@@ -1,0 +1,299 @@
+<div class="page-wrap">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="header-content">
+      <span class="header-badge">✦ Agendar Serviço</span>
+      <h1>Catálogo de <em>Procedimentos</em></h1>
+      <p>Escolha o serviço, profissional e horário ideal para você</p>
+    </div>
+    <div class="header-search" *ngIf="step === 1">
+      <i class="pi pi-search search-icon"></i>
+      <input pInputText [(ngModel)]="busca" placeholder="Buscar serviço..." class="search-input" />
+    </div>
+    <!-- Resumo do serviço selecionado (steps 2-4) -->
+    <div class="selected-badge" *ngIf="step > 1 && selectedProc">
+      <img [src]="selectedProc.fotoUrl || 'https://placehold.co/48x48/1a1a2e/c084fc?text=✦'"
+           [alt]="selectedProc.nome" class="selected-badge-img" />
+      <div>
+        <span class="selected-badge-label">Serviço selecionado</span>
+        <span class="selected-badge-name">{{ selectedProc.nome }}</span>
+      </div>
+      <button pButton icon="pi pi-pencil" class="btn-edit-proc"
+              pTooltip="Trocar serviço" tooltipPosition="left"
+              (click)="step = 1"></button>
+    </div>
+  </div>
+
+  <!-- ── Steps bar ──────────────────────────────────────────────────────── -->
+  <div class="steps-bar">
+    <div class="step" [class.active]="step >= 1" [class.done]="step > 1">
+      <div class="step-num">
+        <i class="pi pi-check" *ngIf="step > 1; else n1"></i>
+        <ng-template #n1>1</ng-template>
+      </div>
+      <span>Serviço</span>
+    </div>
+    <div class="step-line" [class.done]="step > 1"></div>
+    <div class="step" [class.active]="step >= 2" [class.done]="step > 2">
+      <div class="step-num">
+        <i class="pi pi-check" *ngIf="step > 2; else n2"></i>
+        <ng-template #n2>2</ng-template>
+      </div>
+      <span>Profissional</span>
+    </div>
+    <div class="step-line" [class.done]="step > 2"></div>
+    <div class="step" [class.active]="step >= 3" [class.done]="step > 3">
+      <div class="step-num">
+        <i class="pi pi-check" *ngIf="step > 3; else n3"></i>
+        <ng-template #n3>3</ng-template>
+      </div>
+      <span>Horário</span>
+    </div>
+    <div class="step-line" [class.done]="step > 3"></div>
+    <div class="step" [class.active]="step >= 4">
+      <div class="step-num">4</div>
+      <span>Confirmar</span>
+    </div>
+  </div>
+
+  <!-- ══ Step 1: Catálogo ═══════════════════════════════════════════════════ -->
+  <div *ngIf="step === 1" class="step-content">
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingProcs" class="proc-grid">
+      <div *ngFor="let i of [1,2,3,4,5,6]" class="skel-card">
+        <p-skeleton height="200px" borderRadius="0"></p-skeleton>
+        <div style="padding: 20px;">
+          <p-skeleton height="18px" styleClass="mb-2"></p-skeleton>
+          <p-skeleton height="13px" width="80%" styleClass="mb-3"></p-skeleton>
+          <p-skeleton height="13px" width="60%"></p-skeleton>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de procedimentos -->
+    <div *ngIf="!loadingProcs" class="proc-grid">
+      <div *ngFor="let p of filtrados()" class="proc-card" pRipple>
+        <div class="proc-img" (click)="openDetail(p)">
+          <img [src]="p.fotoUrl || 'https://placehold.co/400x220/1a1a2e/c084fc?text=' + p.nome"
+               [alt]="p.nome" loading="lazy" />
+          <div class="proc-hover">
+            <i class="pi pi-eye"></i>
+            <span>Ver detalhes</span>
+          </div>
+        </div>
+        <div class="proc-body">
+          <div class="proc-top">
+            <h3>{{ p.nome }}</h3>
+            <span class="proc-price">R$ {{ p.preco | number:'1.2-2' }}</span>
+          </div>
+          <p>{{ p.descricao }}</p>
+          <div class="proc-footer">
+            <span class="proc-duration">
+              <i class="pi pi-clock"></i> {{ p.duracaoMinutos }} min
+            </span>
+            <button pButton icon="pi pi-calendar-plus" label="Agendar"
+                    class="btn-agendar"
+                    (click)="selectProc(p)"></button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filtrados().length === 0" class="empty-state">
+        <i class="pi pi-search"></i>
+        <span>Nenhum serviço encontrado para "{{ busca }}"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Step 2: Profissional ═══════════════════════════════════════════════ -->
+  <div *ngIf="step === 2" class="step-content">
+
+    <div *ngIf="loadingProfs" class="prof-grid">
+      <p-skeleton *ngFor="let _ of [1,2,3]" height="140px" borderRadius="14px"></p-skeleton>
+    </div>
+
+    <div *ngIf="!loadingProfs && profissionais.length === 0" class="empty-state">
+      <i class="pi pi-user-minus"></i>
+      <p>Nenhum profissional disponível para este serviço.</p>
+    </div>
+
+    <div *ngIf="!loadingProfs && profissionais.length > 0" class="prof-grid">
+      <div *ngFor="let pr of profissionais"
+           class="prof-card"
+           [class.selected]="selectedProfissional?.id === pr.id"
+           (click)="selectProfissional(pr)"
+           (keydown.enter)="selectProfissional(pr)"
+           (keydown.space)="selectProfissional(pr)"
+           tabindex="0"
+           pRipple>
+        <div class="prof-avatar">
+          <img *ngIf="pr.fotoUrl" [src]="pr.fotoUrl" [alt]="pr.nome" />
+          <div *ngIf="!pr.fotoUrl" class="prof-avatar-placeholder">
+            <i class="pi pi-user"></i>
+          </div>
+          <div class="prof-check"><i class="pi pi-check"></i></div>
+        </div>
+        <div class="prof-info">
+          <h3>{{ pr.nome }}</h3>
+          <p *ngIf="pr.bio">{{ pr.bio }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+              class="bb-btn-outline" (click)="step = 1"></button>
+      <button pButton pRipple label="Próximo" icon="pi pi-arrow-right" iconPos="right"
+              class="bb-btn" [disabled]="!selectedProfissional" (click)="goToStep3()"></button>
+    </div>
+  </div>
+
+  <!-- ══ Step 3: Data & Horário ═════════════════════════════════════════════ -->
+  <div *ngIf="step === 3" class="step-content">
+    <div class="slot-layout">
+
+      <div class="slot-calendar-wrap">
+        <h3>Escolha a data</h3>
+        <p-datepicker
+          [formControl]="dataCtrl"
+          [inline]="true"
+          [minDate]="minDate"
+          [showTime]="false"
+          styleClass="bb-calendar"
+          (onSelect)="onDataChange(dataCtrl.value)">
+        </p-datepicker>
+      </div>
+
+      <div class="slot-list-wrap">
+        <h3>Horários disponíveis</h3>
+
+        <div *ngIf="!dataCtrl.value" class="slot-hint">
+          <i class="pi pi-calendar"></i>
+          <span>Selecione uma data para ver os horários.</span>
+        </div>
+
+        <div *ngIf="dataCtrl.value && loadingSlots" class="slot-list">
+          <p-skeleton *ngFor="let _ of [1,2,3,4]" height="44px" borderRadius="10px"></p-skeleton>
+        </div>
+
+        <div *ngIf="dataCtrl.value && !loadingSlots && slots.length === 0" class="slot-hint">
+          <i class="pi pi-calendar-times"></i>
+          <span>Sem horários disponíveis nesta data.</span>
+        </div>
+
+        <div *ngIf="dataCtrl.value && !loadingSlots && slots.length > 0" class="slot-list">
+          <button *ngFor="let s of slots"
+                  pButton pRipple
+                  class="slot-btn"
+                  [class.slot-selected]="selectedSlot === s"
+                  (click)="selectSlot(s)">
+            <i class="pi pi-clock"></i>
+            {{ formatSlotLabel(s) }}
+          </button>
+        </div>
+
+        <div *ngIf="selectedSlot" class="field mt-4" [formGroup]="form">
+          <label for="observacao">Observações <span class="opt">(opcional)</span></label>
+          <textarea id="observacao" pTextarea formControlName="observacao"
+                    placeholder="Ex: prefiro esmalte em gel..."
+                    rows="3" class="w-full"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+              class="bb-btn-outline" (click)="step = 2"></button>
+      <button pButton pRipple label="Revisar" icon="pi pi-arrow-right" iconPos="right"
+              class="bb-btn" [disabled]="!selectedSlot" (click)="goToStep4()"></button>
+    </div>
+  </div>
+
+  <!-- ══ Step 4: Confirmar ══════════════════════════════════════════════════ -->
+  <div *ngIf="step === 4" class="step-content center">
+    <div class="confirm-card">
+      <div class="confirm-icon">✦</div>
+      <h2>Confirmar solicitação</h2>
+
+      <div class="confirm-rows">
+        <div class="confirm-row">
+          <span class="confirm-label">Serviço</span>
+          <span class="confirm-val">{{ selectedProc?.nome }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Duração</span>
+          <span class="confirm-val">{{ selectedProc?.duracaoMinutos }} minutos</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Valor</span>
+          <span class="confirm-val price">R$ {{ selectedProc?.preco | number:'1.2-2' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Profissional</span>
+          <span class="confirm-val">{{ selectedProfissional?.nome }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Data</span>
+          <span class="confirm-val">{{ dataCtrl.value | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Horário</span>
+          <span class="confirm-val">{{ selectedSlot ? formatSlotLabel(selectedSlot) : '' }}</span>
+        </div>
+        <div class="confirm-row" *ngIf="form.get('observacao')?.value">
+          <span class="confirm-label">Observação</span>
+          <span class="confirm-val">{{ form.get('observacao')?.value }}</span>
+        </div>
+      </div>
+
+      <div class="confirm-badge">
+        <i class="pi pi-info-circle"></i>
+        Sua solicitação ficará <strong>pendente</strong> até aprovação do salão.
+      </div>
+
+      <div class="step-actions">
+        <button pButton pRipple label="Voltar" icon="pi pi-arrow-left"
+                class="bb-btn-outline" (click)="step = 3"></button>
+        <button pButton pRipple label="Confirmar solicitação"
+                icon="pi pi-check" iconPos="right"
+                class="bb-btn" [loading]="loadingSubmit" (click)="submit()"></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Modal de detalhe do serviço ──────────────────────────────────────── -->
+<p-dialog [(visible)]="detailVisible" [modal]="true"
+          [closable]="true" [style]="{width: '540px'}"
+          styleClass="bb-dialog proc-dialog">
+  <ng-template pTemplate="header">
+    <span class="dialog-title">{{ detailing?.nome }}</span>
+  </ng-template>
+  <div *ngIf="detailing" class="detail-body">
+    <img [src]="detailing.fotoUrl || 'https://placehold.co/500x260/1a1a2e/c084fc?text=' + detailing.nome"
+         [alt]="detailing.nome" class="detail-img" />
+    <div class="detail-info">
+      <p>{{ detailing.descricao }}</p>
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">Duração</span>
+          <span class="meta-val">{{ detailing.duracaoMinutos }} minutos</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Valor</span>
+          <span class="meta-val price">R$ {{ detailing.preco | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton label="Fechar" class="btn-close-dialog"
+            (click)="detailVisible = false"></button>
+    <button pButton icon="pi pi-calendar-plus" label="Agendar este serviço"
+            class="bb-btn" (click)="selectProc(detailing!)"></button>
+  </ng-template>
+</p-dialog>
+

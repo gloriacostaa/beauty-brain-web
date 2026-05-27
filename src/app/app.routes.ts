@@ -1,5 +1,5 @@
-import { Routes } from '@angular/router';
-import { authGuard, adminGuard, profissionalOrAdminGuard, guestGuard } from './core/guards/guards';
+import {Routes} from '@angular/router';
+import {adminGuard, authGuard, guestGuard, profissionalOrAdminGuard} from './core/guards/guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -10,17 +10,17 @@ export const routes: Routes = [
   { path: 'register', canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent) },
 
-  { path: 'catalogo', canActivate: [authGuard],
-    loadComponent: () => import('./features/catalogo/catalogo.component').then(m => m.CatalogoComponent) },
+  {
+    path: 'catalogo',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/agendamento/agendar/agendar.component').then(m => m.AgendarComponent)
+  },
 
   { path: 'sobre',
     loadComponent: () => import('./features/sobre/sobre.component').then(m => m.SobreComponent) },
 
   { path: 'agenda/minha', canActivate: [authGuard],
     loadComponent: () => import('./features/agenda/minha-agenda/minha-agenda.component').then(m => m.MinhaAgendaComponent) },
-
-  { path: 'agendamentos/novo', canActivate: [authGuard],
-    loadComponent: () => import('./features/agendamento/solicitar/solicitar.component').then(m => m.SolicitarComponent) },
 
   // ADMIN + PROFISSIONAL
   { path: 'agendamentos/aprovacoes', canActivate: [authGuard, profissionalOrAdminGuard],
