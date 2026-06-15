@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600&family=DM+Sans:wght@300;400;500&display=swap');
+
+.page-wrap { padding: 40px; max-width: 1100px; margin: 0 auto; font-family: 'DM Sans', sans-serif; }
+
+.page-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+}
+.page-header h1 {
+  font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600;
+  color: #f1f5f9; margin: 0 0 4px;
+}
+.page-header p { color: rgba(255,255,255,.4); font-size: 14px; margin: 0; }
+
+/* ── Filter bar ──────────────────────────────────────────────────── */
+.filter-wrap {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.search-box { flex: 1; min-width: 220px; position: relative; display: flex; align-items: center; }
+.search-box i { position: absolute; left: 12px; color: rgba(255,255,255,.35); z-index: 1; }
+.search-input {
+  width: 100%; padding-left: 36px !important;
+  background: rgba(255,255,255,.04) !important; border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 10px !important; color: #f1f5f9 !important;
+  font-family: 'DM Sans', sans-serif !important; font-size: 14px !important;
+}
+.search-input:focus { border-color: #c084fc !important; outline: none; }
+.total-badge {
+  font-size: 13px; color: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.05); padding: 6px 14px;
+  border-radius: 20px; border: 1px solid rgba(255,255,255,.08); white-space: nowrap;
+}
+
+/* ── Table ───────────────────────────────────────────────────────── */
+.skel-wrap { display: flex; flex-direction: column; gap: 12px; }
+.table-wrap { border-radius: 14px; overflow: hidden; }
+::ng-deep .bb-table { background: transparent !important; }
+::ng-deep .bb-table .p-datatable-thead > tr > th {
+  background: rgba(255,255,255,.04) !important;
+  color: rgba(255,255,255,.5) !important;
+  font-size: 12px !important; font-weight: 600 !important;
+  text-transform: uppercase; letter-spacing: .5px;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+::ng-deep .bb-table .p-datatable-tbody > tr > td {
+  background: rgba(255,255,255,.02) !important;
+  color: #f1f5f9 !important; font-size: 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,.04) !important;
+}
+::ng-deep .bb-table .p-datatable-tbody > tr:hover > td {
+  background: rgba(192,132,252,.06) !important;
+}
+
+/* ── User cell ───────────────────────────────────────────────────── */
+.user-cell { display: flex; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(124,58,237,.25); display: flex; align-items: center;
+  justify-content: center; font-weight: 700; color: #c084fc; font-size: 15px;
+  text-transform: uppercase;
+}
+.user-name { font-weight: 600; }
+.muted-cell { color: rgba(255,255,255,.45) !important; font-size: 13px !important; }
+.action-btns { display: flex; gap: 4px; }
+.empty-row { text-align: center; color: rgba(255,255,255,.3) !important; padding: 48px !important; }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+::ng-deep .bb-btn { background: linear-gradient(135deg, #7c3aed, #db2777) !important; border: none !important; border-radius: 10px !important; font-family: 'DM Sans', sans-serif !important; font-size: 14px !important; font-weight: 500 !important; }
+::ng-deep .bb-btn-outline { background: transparent !important; border: 1px solid rgba(255,255,255,.15) !important; color: rgba(255,255,255,.6) !important; border-radius: 10px !important; }
+

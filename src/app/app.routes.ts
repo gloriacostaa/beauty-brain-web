@@ -36,5 +36,8 @@ export const routes: Routes = [
   { path: 'admin/servicos', canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./features/admin/servico-form/servico-form.component').then(m => m.ServicoFormComponent) },
 
+  { path: 'admin/usuarios', canActivate: [authGuard, adminGuard],
+    loadComponent: () => import('./features/admin/usuarios-list/usuarios-list.component').then(m => m.UsuariosListComponent) },
+
   { path: '**', redirectTo: 'login' }
 ];

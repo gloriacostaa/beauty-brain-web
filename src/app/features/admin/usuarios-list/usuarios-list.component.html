@@ -1,0 +1,76 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1>Usuários</h1>
+      <p>Visualize e gerencie todos os usuários cadastrados</p>
+    </div>
+    <button pButton icon="pi pi-refresh" label="Atualizar"
+            class="bb-btn-outline" (click)="carregar()"></button>
+  </div>
+  <div class="filter-wrap">
+    <span class="search-box">
+      <i class="pi pi-search"></i>
+      <input pInputText [(ngModel)]="filtro" placeholder="Buscar por nome ou e-mail..." class="search-input" />
+    </span>
+    <span class="total-badge">{{ usuariosFiltrados.length }} usuário(s)</span>
+  </div>
+  <div *ngIf="loading" class="skel-wrap">
+    <p-skeleton *ngFor="let _ of [1,2,3,4,5]" height="56px" borderRadius="12px"></p-skeleton>
+  </div>
+    <p-table [value]="usuariosFiltrados"
+             [paginator]="usuariosFiltrados.length > 10" [rows]="10"
+             styleClass="bb-table" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Usuário</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Perfil</th>
+          <th>Cadastro</th>
+          <th>Status</th>
+          <th style="width:110px">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-u>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar">{{ u.nome[0] }}</div>
+              <span class="user-name">{{ u.nome }}</span>
+            </div>
+          </td>
+          <td class="muted-cell">{{ u.email }}</td>
+          <td class="muted-cell">{{ u.telefone || '—' }}</td>
+          <td>
+            <p-tag [value]="roleLabel(u.role)"
+                   [severity]="roleSeverity(u.role)"></p-tag>
+          </td>
+          <td class="muted-cell">{{ u.criadoEm | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <p-tag [value]="u.ativo ? 'Ativo' : 'Inativo'"
+                   [severity]="u.ativo ? 'success' : 'danger'"></p-tag>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button pButton
+                      [icon]="u.ativo ? 'pi pi-ban' : 'pi pi-check-circle'"
+                      class="p-button-text p-button-sm"
+                      [class.p-button-danger]="u.ativo"
+                      [pTooltip]="u.ativo ? 'Desativar' : 'Ativar'"
+                      tooltipPosition="top"
+                      (click)="confirmarToggleAtivo(u)">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="empty-row">
+            <i class="pi pi-users" style="font-size:2rem;opacity:.3;display:block;margin-bottom:8px"></i>
+            Nenhum usuário encontrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
