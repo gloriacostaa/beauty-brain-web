@@ -34,6 +34,7 @@
         <p-tag [value]="statusLabel(a.status)"
                [severity]="statusSeverity(a.status)"
                styleClass="bb-tag"></p-tag>
+
         <span class="card-date">{{ a.inicio | date:'dd/MM/yyyy' }}</span>
       </div>
 
@@ -43,6 +44,7 @@
       </div>
       <div class="card-time">
         <i class="pi pi-clock"></i> {{ a.inicio | date:'HH:mm' }} – {{ a.fim | date:'HH:mm' }}
+        <i class="pi pi-dollar"></i>{{ a.procedimentoPreco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
       </div>
 
       <div class="card-obs" *ngIf="a.observacao">
@@ -54,6 +56,11 @@
       </div>
 
       <div class="card-footer">
+        <button *ngIf="a.status === 'APROVADO'"
+                label="Imprimir"
+                pButton icon="pi pi-print" class="btn-print"
+                pTooltip="Imprimir comprovante" tooltipPosition="top"
+                (click)="imprimir(a)"></button>
         <button pButton icon="pi pi-times" label="Cancelar" class="btn-cancel"
                 *ngIf="a.status === 'PENDENTE' || a.status === 'APROVADO'"
                 (click)="cancelar(a)"></button>

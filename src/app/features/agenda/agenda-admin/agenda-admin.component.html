@@ -42,6 +42,7 @@
           <th pSortableColumn="procedimentoNome">Serviço <p-sortIcon field="procedimentoNome"></p-sortIcon></th>
           <th pSortableColumn="profissionalNome">Profissional <p-sortIcon field="profissionalNome"></p-sortIcon></th>
           <th pSortableColumn="inicio">Data & Hora <p-sortIcon field="inicio"></p-sortIcon></th>
+          <th pSortableColumn="procedimentoPreco">Preço <p-sortIcon field="procedimentoPreco"></p-sortIcon></th>
           <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
           <th>Observação / Motivo</th>
         </tr>
@@ -58,6 +59,7 @@
           <td><span class="service-tag">{{ a.procedimentoNome }}</span></td>
           <td>{{ a.profissionalNome }}</td>
           <td>{{ a.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ a.procedimentoPreco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
           <td>
             <p-tag [value]="statusLabel(a.status)"
                    [severity]="statusSeverity(a.status)"
@@ -69,7 +71,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6">
+          <td colspan="7">
             <div class="empty-state">
               <i class="pi pi-calendar"></i>
               <span>Nenhum agendamento</span>

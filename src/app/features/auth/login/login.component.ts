@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { inject } from '@angular/core';
-import { MessageService } from 'primeng/api';
-import { AuthService } from '../../../core/services/auth.service';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
+import {Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {MessageService} from 'primeng/api';
+import {AuthService} from '../../../core/services/auth.service';
+import {InputTextModule} from 'primeng/inputtext';
+import {PasswordModule} from 'primeng/password';
+import {ButtonModule} from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +40,7 @@ export class LoginComponent {
     this.loading = true;
     this.auth.login(this.form.value as any).subscribe({
       next: res => {
-        this.router.navigate([res.role === 'ADMIN' ? '/agendamentos/aprovacoes' : '/agenda/minha']);
+        this.router.navigate([(res.role === 'ADMIN' || res.role === 'PROFISSIONAL') ? '/agendamentos/aprovacoes' : '/agenda/minha']);
       },
       error: () => {
         this.msg.add({ severity: 'error', summary: 'Erro', detail: 'E-mail ou senha incorretos' });

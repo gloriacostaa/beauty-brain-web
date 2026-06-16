@@ -1,4 +1,4 @@
-export type Role = 'ADMIN' | 'USER';
+export type Role = 'ADMIN' | 'USER' | 'PROFISSIONAL';
 export type StatusAgendamento = 'PENDENTE' | 'APROVADO' | 'RECUSADO' | 'CANCELADO';
 export type DiaSemana = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -91,6 +91,7 @@ export interface Agendamento {
   usuarioNome: string;
   procedimentoId: number;
   procedimentoNome: string;
+  procedimentoPreco?: number;
   profissionalId: number;
   profissionalNome: string;
   inicio: string;   // OffsetDateTime ISO-8601
